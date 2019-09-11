@@ -16,6 +16,7 @@ import com.g2m.asset.R;
 import com.g2m.asset.databinding.ActivityRoomBinding;
 import com.g2m.asset.interfaces.ClickListener;
 import com.g2m.asset.models.dataModels.AssetModel;
+import com.g2m.asset.models.dataModels.RoomModel;
 import com.g2m.asset.models.network.DataModel;
 
 import java.util.ArrayList;
@@ -94,12 +95,16 @@ List<DataModel>categoryList=new ArrayList<>();
         String code =roomBinding.barcode.getText().toString();
         if(code.length()==6) {
             viewModel.getAssetsFromRoom(code);
-            viewModel.getDepartment(code).observe(this, new Observer<String>() {
+            viewModel.getDepartment(code).observe(this, new Observer<RoomModel>() {
                 @Override
-                public void onChanged(String s) {
-                    roomBinding.dep.setText(s);
+                public void onChanged(RoomModel s) {
+                    roomBinding.dep.setText(s.department);
+                    roomBinding.name.setText(s.name);
+
                 }
             });
+            roomBinding.code.setText(code);
+            roomBinding.barcode.setText("");
         }
     }
 }

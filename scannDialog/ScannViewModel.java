@@ -38,48 +38,9 @@ return LocalRepositry.getAssetsOfInventory(inv_id);
         asset.inv_id=inv_id;
         asset.asset_id=asset_id;
         LocalRepositry.saveWhatScan(asset);
+
     }
 
-    public void assetConfirm(List<ScannModels>list,int inv_id){
-
-        try {
-            JSONArray jsonArray=new JSONArray();
-            for(int i=0;i<list.size();i++) {
-            ScannModels model=list.get(i);
-            JSONObject jsonObj = new JSONObject();
-            jsonObj.put("asset_id", model.asset_id);
-                jsonObj.put("asset_qty",model.status);
-            jsonArray.put(jsonObj);
-
-        }
-            send(jsonArray.toString(),inv_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    public void send(String data,int id){
-        RemoteRepositry.assetConfirm(data,id)
-                .subscribeWith(new SingleObserver<ResponseBody>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(ResponseBody responseBody) {
-                        try {
-                            Log.v("tttttt",responseBody.string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.v("tttttt",e.getMessage());
-                    }
-                });
-    }
 
 
 }

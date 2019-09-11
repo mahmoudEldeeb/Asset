@@ -11,6 +11,7 @@ import com.g2m.asset.R;
 import com.g2m.asset.models.dataModels.AllDataField;
 import com.g2m.asset.models.dataModels.AssetModel;
 import com.g2m.asset.models.dataModels.LocationModel;
+import com.g2m.asset.models.dataModels.Result;
 import com.g2m.asset.models.dataModels.RoomModel;
 import com.g2m.asset.models.dataModels.SubLocationModel;
 import com.g2m.asset.models.dataModels.TransfeerModel;
@@ -70,25 +71,23 @@ public void saveTransfer(final List<TransfeerModel> list){
         }
 
         //  jsonObj1.put("asd",jsonArray);
-        RemoteRepositry.savTransfeer(jsonArray.toString()).subscribeWith(new SingleObserver<ResponseBody>() {
+        RemoteRepositry.savTransfeer(jsonArray.toString()).subscribeWith(new SingleObserver<Result>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onSuccess(ResponseBody responseBody) {
-                try {
-                    Log.v("oooo",responseBody.string());
+            public void onSuccess(Result result) {
+                    if(result.status){
                  LocalRepositry.updateAssets(list);
                     if(Constants.transferFinsh) {
                         Activity activity = (Activity) Constants.context;
-                        activity.finish();
-                    }
+                       // activity.finish();
+                    }}
+                    Helper.showToast(result.message);
                  Helper.dismiss();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
             }
             @Override
             public void onError(Throwable e) {
@@ -104,10 +103,11 @@ public void saveTransfer(final List<TransfeerModel> list){
 
     public void saveOfline(List<TransfeerModel> list) {
         LocalRepositry.saveTransfer(list);
+        Helper.showToast("done");
         Helper.dismiss();
         if(Constants.transferFinsh) {
             Activity activity = (Activity) Constants.context;
-            activity.finish();
+            //activity.finish();
         }
 
     }

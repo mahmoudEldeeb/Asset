@@ -36,12 +36,14 @@ List<LocationModel>locationModelList=new ArrayList<>();
     List<SubLocationModel>subLocationModelList=new ArrayList<>();
     List<RoomModel>roomModelListr=new ArrayList<>();
     AllDataField model=new AllDataField();
+    TransfeerModel oldmModel=new TransfeerModel();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        transfeerBinding= DataBindingUtil.setContentView(this,R.layout.activity_transfeer);
         getSupportActionBar().setTitle("Asset Transfer");
         Constants.context=this;
+
        viewModel= ViewModelProviders.of(this).get(TransferViewModel.class);
        transfeerBinding.setClickListener(this);
         Intent intent=getIntent();
@@ -57,6 +59,17 @@ List<LocationModel>locationModelList=new ArrayList<>();
                locationModelList.addAll(locationModels);
                transfeerBinding.spinnerMainLocation
                        .setAdapter(getAdapterOfSpinner(SimpelSpinnerAdapter.getStringDataFroomLoc(locationModels)));
+
+              if(oldmModel!=null)
+              {for(int i=0;i<locationModels.size();i++){
+                   Log.v("rrrrr",locationModelList.get(i).loc_t_id+"  "+oldmModel.location_id_new);
+
+                   if (locationModels.get(i).loc_t_id==oldmModel.location_id_new){
+                       Log.v("rrrrr","dffffffffff");
+                       transfeerBinding.spinnerMainLocation.setSelection(i+1);
+                   }
+               }
+              }
 
            }
        });
@@ -90,7 +103,45 @@ List<LocationModel>locationModelList=new ArrayList<>();
            }
        });
 
+       transfeerBinding.save.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+Helper.showDialog();
+               try {
+                   if (model.getAssetModel().barcode == null) {
+                       ViewDialog.showDialog("please fill all data right ", false);
+                       Helper.dismiss();
+                   } else {
+                       viewModel.saveOfline(getData());
 
+                   }
+
+
+               } catch (ArrayIndexOutOfBoundsException e) {
+                   Helper.dismiss();
+                   ViewDialog.showDialog("please fill all data right", false);
+               }
+           }
+
+       });
+
+        fillData();
+    }
+
+    private void fillData() {
+
+        Intent intent=getIntent();
+        if(intent!=null){
+            try {
+                oldmModel = (TransfeerModel) intent.getSerializableExtra("transfeerObject");
+                transfeerBinding.barcode.setText(oldmModel.barcode);
+                onTextChange();
+                Log.v("rrrrr", "bbbbbbbbbbb");
+            }catch (NullPointerException y){}
+
+
+
+        }
     }
 
     private void getRooms(int idLoc, int idsubLoc) {
@@ -101,6 +152,16 @@ List<LocationModel>locationModelList=new ArrayList<>();
                 roomModelListr.addAll(roomModels);
                 transfeerBinding.spinnerEmployeeLocation
                         .setAdapter(getAdapterOfSpinner(SimpelSpinnerAdapter.getStringDataFromRoom(roomModels)));
+                if(oldmModel!=null)
+                {for(int i=0;i<roomModels.size();i++){
+
+
+                    if (roomModels.get(i).id==oldmModel.room_new){
+                        Log.v("rrrrr","dffffffffff");
+                        transfeerBinding.spinnerEmployeeLocation.setSelection(i+1);
+                    }
+                }
+                }
 
             }
         });
@@ -116,6 +177,16 @@ List<LocationModel>locationModelList=new ArrayList<>();
                 subLocationModelList.addAll(subLocationModels);
                 transfeerBinding.spinnerSubLocation
                         .setAdapter(getAdapterOfSpinner(SimpelSpinnerAdapter.getStringDataFromSub(subLocationModels)));
+                if(oldmModel!=null)
+                {for(int i=0;i<subLocationModels.size();i++){
+
+                    if (subLocationModels.get(i).id==oldmModel.sub_location_new){
+                        Log.v("rrrrr","dffffffffff");
+                        transfeerBinding.spinnerSubLocation.setSelection(i+1);
+                    }
+                }
+                }
+
 
             }
         });
@@ -138,26 +209,12 @@ return arrayAdapter;
                Helper.dismiss();
            }
            else {
-               TransfeerModel transfeerModel = new TransfeerModel();
-               transfeerModel.asset_id_old = model.getAssetModel().id;
-               transfeerModel.barcode = model.getAssetModel().barcode;
-               transfeerModel.location_id_old = model.getLocationModel().loc_t_id;
-               transfeerModel.sub_location_old = model.getSubLocationModel().id;
-               transfeerModel.room_old = model.getRoomModel().id;
-               transfeerModel.location_id_new = locationModelList.
-                       get(transfeerBinding.spinnerMainLocation.getSelectedItemPosition() - 1).loc_t_id;
-               transfeerModel.sub_location_new = subLocationModelList.
-                       get(transfeerBinding.spinnerSubLocation.getSelectedItemPosition() - 1).id;
-               transfeerModel.room_new = roomModelListr.
-                       get(transfeerBinding.spinnerEmployeeLocation.getSelectedItemPosition() - 1).id;
-               transfeerModel.status = true;
-               List<TransfeerModel> list = new ArrayList<>();
-               list.add(transfeerModel);
+
                if (Helper.isNetworkAvailable())
-                   viewModel.saveTransfer(list);
+                   viewModel.saveTransfer(getData());
                else {
                    ViewDialog.showDialog(getResources().getString(R.string.no_internet_transfer), true);
-                   viewModel.saveOfline(list);
+                   viewModel.saveOfline(getData());
 
                }
            }
@@ -168,6 +225,24 @@ return arrayAdapter;
 
     }
 
+    public List<TransfeerModel>getData(){
+        TransfeerModel transfeerModel = new TransfeerModel();
+        transfeerModel.asset_id_old = model.getAssetModel().id;
+        transfeerModel.barcode = model.getAssetModel().barcode;
+        transfeerModel.location_id_old = model.getLocationModel().loc_t_id;
+        transfeerModel.sub_location_old = model.getSubLocationModel().id;
+        transfeerModel.room_old = model.getRoomModel().id;
+        transfeerModel.location_id_new = locationModelList.
+                get(transfeerBinding.spinnerMainLocation.getSelectedItemPosition() - 1).loc_t_id;
+        transfeerModel.sub_location_new = subLocationModelList.
+                get(transfeerBinding.spinnerSubLocation.getSelectedItemPosition() - 1).id;
+        transfeerModel.room_new = roomModelListr.
+                get(transfeerBinding.spinnerEmployeeLocation.getSelectedItemPosition() - 1).id;
+        transfeerModel.status = true;
+        List<TransfeerModel> list = new ArrayList<>();
+        list.add(transfeerModel);
+return list;
+    }
     @Override
     public void onTextChange() {
         String code =transfeerBinding.barcode.getText().toString();

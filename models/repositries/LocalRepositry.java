@@ -19,6 +19,7 @@ import com.g2m.asset.models.dataModels.SubLocationModel;
 import com.g2m.asset.models.dataModels.TransfeerModel;
 import com.g2m.asset.models.databases.DataDao;
 import com.g2m.asset.models.databases.LocalDatabase;
+import com.g2m.asset.oldTransfeer.OldTransfeerModel;
 import com.g2m.asset.scannDialog.ScannModels;
 import com.g2m.asset.util.Helper;
 
@@ -38,6 +39,7 @@ import io.reactivex.internal.operators.flowable.FlowableFromCallable;
 import io.reactivex.schedulers.Schedulers;
 
 public class LocalRepositry {
+
     private static DataDao dataDao;
 
     public static DataDao getDao(){
@@ -77,7 +79,7 @@ public class LocalRepositry {
 
     }
 
-    public static LiveData<String> getDepartment(String code) {
+    public static LiveData<RoomModel> getDepartment(String code) {
         return getDao().getDepartment(code);
     }
     public static LiveData<List<LocationModel>>getLocations(){
@@ -191,28 +193,17 @@ Log.v("vvvvv",e.getMessage());
     }
 
 
-    public static Single<List<InventoryTabel>> getAllOperations() {
-        return  getDao().getAllOperations()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+    public static LiveData<List<InventoryTabel>> getAllOperations() {
+        return  getDao().getAllOperations();
     }
 
     public static void saveOperation(final List<InventoryModel> asset_adjust, final List<AssetOfInventory> listAsset) {
 
 
         final List<InventoryTabel>list=new ArrayList<>();
-        //final List<AssetOfInventory>listAsset=new ArrayList<>();
         for(int i=0;i<asset_adjust.size();i++){
             list.add(new InventoryTabel(asset_adjust.get(i).getId(),asset_adjust.get(i).getDisplay_name()
                     ,asset_adjust.get(i).getDate()));
-//                for (int j=0;j<asset_adjust.get(i).getLine_ids().size();j++){
-//                    AssetOfInventory model=new AssetOfInventory();
-//                    model.asset_id=asset_adjust.get(i).getLine_ids().get(j);
-//                    model.inv_id=asset_adjust.get(i).getId();
-//                    model.status=0;
-//                    listAsset.add(model);
-//                }
-
 
         }
 
@@ -223,6 +214,7 @@ Log.v("vvvvv",e.getMessage());
                 getDao().insertOperations(list);
                 getDao().insertAssetOfOperations(listAsset);
                 Helper.dismiss();
+                Prefrences.changeFirstInventory();
             }
         });
 
@@ -247,5 +239,36 @@ Log.v("vvvvv",e.getMessage());
                 getDao().saveWhatScan(asset);
             }
         });
+    }
+
+
+    public static Single<List<AssetOfInventory>> getInventoryNotSend(int id) {
+        return getDao().getInventoryIdNotSent(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public static void saveInventAsSent(final int id) {
+        final Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                getDao().setInventoryAsSent(true,id);
+            }
+        });
+    }
+
+    public static void delete(final int inv_id) {
+        final Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                getDao().delete(inv_id);
+                getDao().deleteAsset(inv_id);
+            }
+        });
+    }
+
+    public static LiveData<List<OldTransfeerModel>>getAllTransfeer(){
+        return getDao().getAllTransfeer();
     }
 }

@@ -22,4 +22,12 @@ public class Prefrences
             return getPrefrence().getBoolean("isFirstTime",true);
         }
 
+
+    public static void changeFirstInventory(){
+        getEditor().putBoolean("FirstInventory",false).commit();
+    }
+    public static boolean iSFirstInventory(){
+        return getPrefrence().getBoolean("FirstInventory",true);
+    }
+
 }

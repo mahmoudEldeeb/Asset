@@ -16,6 +16,7 @@ import com.g2m.asset.databinding.ItemPageBinding;
 import com.g2m.asset.interfaces.ClickListener;
 import com.g2m.asset.inventory.InventoryActivity;
 import com.g2m.asset.login.User;
+import com.g2m.asset.oldTransfeer.OldTransfeerActivity;
 import com.g2m.asset.roomInfo.RoomActivity;
 import com.g2m.asset.transfeer.TransfeerActivity;
 
@@ -33,7 +34,7 @@ public class HomeAdapter  extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
         HomeModel model1=new HomeModel("Room Info",R.drawable.roominfo);
         list.add(model1);
-        HomeModel model2=new HomeModel("Transfeer ",R.drawable.asset_transfer);
+        HomeModel model2=new HomeModel("Transfer ",R.drawable.asset_transfer);
         list.add(model2);
         HomeModel model3=new HomeModel("Inventory",R.drawable.roominfo);
         list.add(model3);
@@ -67,12 +68,9 @@ public class HomeAdapter  extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
         public ViewHolder(ItemPageBinding itemview) {
             super(itemview.getRoot());
             itemPageBinding=itemview;
-
         }
-
         @Override
         public void onClick() {
-            Log.v("sssss",getAdapterPosition()+"    b");
             if(getAdapterPosition()==0){
                 context.startActivity(new Intent(context, AssetInfoActivity.class));
             }
@@ -83,7 +81,7 @@ public class HomeAdapter  extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
                 context.startActivity(new Intent(context, InventoryActivity.class));
             }
             else if (getAdapterPosition()==2){
-                context.startActivity(new Intent(context, TransfeerActivity.class));
+                context.startActivity(new Intent(context, OldTransfeerActivity.class));
             }
 
         }

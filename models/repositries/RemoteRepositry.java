@@ -1,8 +1,9 @@
 package com.g2m.asset.models.repositries;
 
-import com.g2m.asset.models.EggsModel;
+import com.g2m.asset.models.AllInventoryData;
 import com.g2m.asset.models.dataModels.InventoryModel;
 import com.g2m.asset.models.dataModels.InventoryModelResult;
+import com.g2m.asset.models.dataModels.Result;
 import com.g2m.asset.models.network.RetrofitConnection;
 import com.g2m.asset.util.Helper;
 
@@ -19,7 +20,7 @@ public class RemoteRepositry {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public static Single<ResponseBody>savTransfeer(String data){
+    public static Single<Result>savTransfeer(String data){
         return RetrofitConnection.getNetworkConnection().sendTransfer(data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -30,14 +31,14 @@ public class RemoteRepositry {
                     .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public static Single<EggsModel>getEggoperations(){
-        return RetrofitConnection.getNetworkConnection().getEggoperations()
+    public static Single<AllInventoryData>getAllInventoryData(){
+        return RetrofitConnection.getNetworkConnection().getAllInventoryData()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
 
-    public static Single<ResponseBody>assetConfirm(String data,int inv_id){
+    public static Single<Result>assetConfirm(String data,int inv_id){
         return RetrofitConnection.getNetworkConnection().assetConfirm(data,inv_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

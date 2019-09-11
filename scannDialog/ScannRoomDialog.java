@@ -57,7 +57,8 @@ DialogScannRoomBinding scannRoomBinding;
 //                dialogInteract.onclick();
 //
 //
-                viewModel.assetConfirm(scannAdapter.scannModelsList,id);
+               // viewModel.assetConfirm(scannAdapter.scannModelsList,id);
+                dismiss();
             }
         });
 

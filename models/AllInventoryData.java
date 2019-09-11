@@ -4,7 +4,7 @@ import com.g2m.asset.models.dataModels.InventoryModel;
 
 import java.util.List;
 
-public class EggsModel {
+public class AllInventoryData {
 public List<List<Model>>asset_code;
 
     public List<List<Model>> getAsset_code() {

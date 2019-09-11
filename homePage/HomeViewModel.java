@@ -12,6 +12,7 @@ import com.g2m.asset.R;
 import com.g2m.asset.models.dataModels.AllDataField;
 import com.g2m.asset.models.dataModels.AssetModel;
 import com.g2m.asset.models.dataModels.LocationModel;
+import com.g2m.asset.models.dataModels.Result;
 import com.g2m.asset.models.dataModels.TransfeerModel;
 import com.g2m.asset.models.repositries.LocalRepositry;
 import com.g2m.asset.models.repositries.RemoteRepositry;
@@ -61,7 +62,7 @@ LiveData<List<AssetModel>>allAsset=new MediatorLiveData<>();
                     saveData(locList,sublist,roomList,assetList);
 
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    e.printStackTrace() ;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -140,30 +141,28 @@ LiveData<List<AssetModel>>allAsset=new MediatorLiveData<>();
                 jsonArray.put(jsonObj);
             }
 
-            //  jsonObj1.put("asd",jsonArray);
-            RemoteRepositry.savTransfeer(jsonArray.toString()).subscribeWith(new SingleObserver<ResponseBody>() {
+             //  jsonObj1.put("asd",jsonArray);
+            RemoteRepositry.savTransfeer(jsonArray.toString()).subscribeWith(new SingleObserver<Result>() {
                 @Override
                 public void onSubscribe(Disposable d) {
 
                 }
 
                 @Override
-                public void onSuccess(ResponseBody responseBody) {
-                    try {
-                        Log.v("oooo",responseBody.string());
-                        LocalRepositry.updateAssets(list);
+                public void onSuccess(Result result) {
+
+                        if(result.status) {
+                            LocalRepositry.updateAssets(list);
+                        }
+                        Helper.showToast(result.message);
                         Helper.dismiss();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+
                 }
                 @Override
                 public void onError(Throwable e) {
-                   // LocalRepositry.updateAssets(list);
                     ViewDialog.showDialog(Constants.context.getResources()
                             .getString(R.string.no_connection_transfer),false);
                     Helper.dismiss();
-
                 }
             });
             Log.v("oooooo","      "+jsonArray.toString());

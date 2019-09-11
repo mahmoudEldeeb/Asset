@@ -15,7 +15,6 @@ public class RoomModel {
     @ColumnInfo(name = "room_t_sub_loc_id")
     public int sub_loc_id;
     @ColumnInfo(name = "room_t_name")
-
     public String name;
     @ColumnInfo(name = "room_t_department")
     public  String department;

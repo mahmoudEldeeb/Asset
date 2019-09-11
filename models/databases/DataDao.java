@@ -9,29 +9,26 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.g2m.asset.assetInfo.AseetModel;
 import com.g2m.asset.models.dataModels.AllDataField;
 import com.g2m.asset.models.dataModels.AssetModel;
 import com.g2m.asset.models.dataModels.AssetOfInventory;
-import com.g2m.asset.models.dataModels.InventoryModel;
 import com.g2m.asset.models.dataModels.InventoryTabel;
 import com.g2m.asset.models.dataModels.LocationModel;
 import com.g2m.asset.models.dataModels.RoomModel;
 import com.g2m.asset.models.dataModels.SubLocationModel;
 import com.g2m.asset.models.dataModels.TransfeerModel;
+import com.g2m.asset.oldTransfeer.OldTransfeerModel;
 import com.g2m.asset.scannDialog.ScannModels;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import okhttp3.ResponseBody;
 
 
 @Dao
 public interface DataDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOperations(List<InventoryTabel> asset_adjust);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -75,8 +72,9 @@ public interface DataDao {
 
     @Query("SELECT * FROM AssetTabel where room_id = (Select room_id From RoomTabel where barcode=:code)")
     Single<List<AssetModel>> getAsetOfRoom(String code);
-    @Query("SELECT room_t_department FROM RoomTabel where room_t_barcode=:barcode")
-    LiveData<String> getDepartment(String barcode);
+
+    @Query("SELECT RoomTabel.* FROM RoomTabel where room_t_barcode=:barcode")
+    LiveData<RoomModel> getDepartment(String barcode);
 
 
 
@@ -97,6 +95,7 @@ public interface DataDao {
 
 
 
+
     @Query("SELECT AssetTabel.* from AssetTabel" )
     Single<List<AssetModel>> getAllData();
 
@@ -104,9 +103,10 @@ public interface DataDao {
             "where  AssetOfInventory.inv_id =:id " )
     LiveData<List<ScannModels>> getAssetsOfInventory(int id);
 
+    @Query("SELECT AssetOfInventory.* from AssetOfInventory " +
+            "where inv_id=:value" )
+    Single<List<AssetOfInventory>> getInventoryIdNotSent(int value);
 
-//@Query("Update AssetTabel set loc_id=:loc_id and sub_loc_id=:sub_loc and room_id=:room where barcode=:barcode")
-//    int updateAssetLocation(int loc_id,int sub_loc,int room,String barcode);
 
     @Query("Update TransferTabel set status=:state where barcode=:barcode")
     void updateAssetTransferModel(boolean state,String barcode);
@@ -114,14 +114,30 @@ public interface DataDao {
 @Update
     void updateAsset(AssetModel assetModel);
 
-
-
     @Query("SELECT * from InventoryTabel" )
-    Single<List<InventoryTabel>> getAllOperations();
+    LiveData<List<InventoryTabel>> getAllOperations();
+
+    @Query("SELECT TransferTabel.*,AssetTabel.name from TransferTabel join AssetTabel on TransferTabel.barcode=AssetTabel.barcode " )
+    LiveData<List<OldTransfeerModel>> getAllTransfeer();
 
     @Query("SELECT * from InventoryTabel " )
     InventoryTabel checkScannedOrNot();
 
+
     @Update
     void saveWhatScan(AssetOfInventory asset);
+
+
+
+    @Query("UPDATE InventoryTabel SET sendOrNot=:b where inv_id=:id" )
+    void setInventoryAsSent(boolean b,int id);
+
+
+    @Query("Delete from  InventoryTabel where inv_id=:id" )
+    void delete(int id);
+    @Query("Delete from  AssetOfInventory where inv_id=:id" )
+    void deleteAsset(int id);
+
+
+
 }

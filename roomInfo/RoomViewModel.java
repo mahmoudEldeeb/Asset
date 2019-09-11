@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.g2m.asset.models.dataModels.AssetModel;
+import com.g2m.asset.models.dataModels.RoomModel;
 import com.g2m.asset.models.network.DataModel;
 import com.g2m.asset.models.repositries.LocalRepositry;
 
@@ -135,7 +136,7 @@ MutableLiveData<List<AssetModel>>assetList=new MutableLiveData<>();
 
 }
 
-    public LiveData<String> getDepartment(String code) {
+    public LiveData<RoomModel> getDepartment(String code) {
         return LocalRepositry.getDepartment(code);
     }
 }

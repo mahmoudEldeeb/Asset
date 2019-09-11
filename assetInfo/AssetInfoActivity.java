@@ -32,16 +32,7 @@ AssetInfoViewModel viewModel;
         assetInfoBinding.setAssetModel(allDataField);
         viewModel= ViewModelProviders.of(this).get(AssetInfoViewModel.class);
 
-//        viewModel.getAssetData("000002");
-//        viewModel.data.observe(this, new Observer<AssetModel>() {
-//            @Override
-//            public void onChanged(AssetModel a) {
-//                if(a!=null) {
-//                    aseetModel = a;
-//                    assetInfoBinding.setAssetModel(aseetModel);
-//                }
-//            }
-//        });
+
 
     }
     @Override
@@ -55,6 +46,7 @@ AssetInfoViewModel viewModel;
                 Log.v("rrrr",assetInfoBinding.barcode.getText().toString());
                 //viewModel.getAssetData("000002");
                 getAssetsData(assetInfoBinding.barcode.getText().toString());
+                assetInfoBinding.barcode.setText("");
             }
         //aseetModel.setDescribtion("aaaaaaaaaaaaa");
 

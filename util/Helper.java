@@ -41,13 +41,11 @@ public class Helper {
                 model.loc_barcode = object.getString("barcode");
                 model.loc_t_id = object.getInt("id");
                 model.loc_name = object.getString("name");
-                Log.v("aaaaa", "fffddd");
                 locationModels.add(model);
             } catch (JSONException e) {
                 Log.v("aaaaa", e.getMessage());
                 e.printStackTrace();
             }
-
         }
         return locationModels;
     }
@@ -157,5 +155,9 @@ public class Helper {
 
     public static void showNoInternet() {
         Toast.makeText(Constants.context,"no internet",Toast.LENGTH_LONG).show();
+    }
+
+    public static void showToast(String message) {
+        Toast.makeText(Constants.context,message,Toast.LENGTH_LONG).show();
     }
 }

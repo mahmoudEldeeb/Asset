@@ -1,5 +1,6 @@
 package com.g2m.asset.models.dataModels;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -22,6 +23,7 @@ public class InventoryModel {
 
     private String display_name,date;
     private List<Integer>line_ids;
+
 
     public String getDisplay_name() {
         return display_name;

@@ -62,18 +62,18 @@ if(Prefrences.iSfirstTime()){
         .observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
-                if (sendItem != null) {
-                    if (integer > 0) {
-                        homeBinding.setUpdateButtonVisibl(true);
-                        sendItem.setVisible(true);
-                    } else sendItem.setVisible(false);
-
-                }else {
-                    if(integer>0)sendItemVisibility=true;
-                    else sendItemVisibility=false;
-                }
+//                if (sendItem != null) {
+//                    if (integer > 0) {
+//                        homeBinding.setUpdateButtonVisibl(true);
+//                        sendItem.setVisible(true);
+//                    } else sendItem.setVisible(false);
+//
+//                }else {
+//                    if(integer>0)sendItemVisibility=true;
+//                    else sendItemVisibility=false;
+//                }
+//            }
             }
-
         });
 
 
@@ -87,11 +87,11 @@ if(Prefrences.iSfirstTime()){
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu=menu;
+     //   this.menu=menu;
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-        sendItem=menu.findItem(R.id.send);
-        sendItem.setVisible(sendItemVisibility);
+       /// sendItem=menu.findItem(R.id.send);
+//        sendItem.setVisible(sendItemVisibility);
         return true;
 
     }
@@ -104,7 +104,7 @@ if(Prefrences.iSfirstTime()){
             else {
                 if(item.getItemId()==R.id.refresh)
                 viewModel.getAllData();
-                else viewModel.sendData();
+               // else viewModel.sendData();
             }
 
         return true;
